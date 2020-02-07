@@ -1,0 +1,4 @@
+# Failer
+
+Simulate failure.
+
