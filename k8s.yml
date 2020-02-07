@@ -1,0 +1,55 @@
+---
+kind: Namespace
+apiVersion: v1
+metadata:
+  name: failer
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: failer
+  namespace: failer
+  labels:
+    app.kubernetes.io/name: failer
+    app.kubernetes.io/version: latest
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: failer
+  template:
+    metadata:
+      labels:
+        app: failer
+    spec:
+      containers:
+      - name: failer
+        image: buoyantio/failer:latest
+        imagePullPolicy: IfNotPresent
+        command:
+        - "./failer"
+        - "--addr=:8080"
+        - "--distribution=evenly"
+        - "--success-rate=95"
+        ports:
+        - name: http
+          containerPort: 8080
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          failureThreshold: 1
+          successThreshold: 1
+          periodSeconds: 1
+          timeoutSeconds: 1
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8080
+          initialDelaySeconds: 5
+          failureThreshold: 1
+          successThreshold: 1
+          periodSeconds: 1
+          timeoutSeconds: 1
+---
