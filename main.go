@@ -77,7 +77,6 @@ func (h *handler) handle(w http.ResponseWriter, r *http.Request) {
 	case failEvenly:
 		num := h.requests % h.loopTotal
 		success = num < h.loopSuccesses
-
 		msg = fmt.Sprintf("%s [%d/%d] [%d]", h.dist, h.loopSuccesses, h.loopTotal, num)
 	}
 
